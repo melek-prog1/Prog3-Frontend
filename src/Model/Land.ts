@@ -4,3 +4,4 @@ export interface Land {
   besucht: boolean;
   geplant: boolean;
 }
+//bitte
