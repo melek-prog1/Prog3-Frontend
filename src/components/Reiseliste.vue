@@ -1,82 +1,59 @@
 <template>
-  <div>
-    <h2>Reiseliste</h2>
+  <div id="app">
+    <h1>Reiseliste</h1>
     <ul>
-      <li v-for="reise in reisen" :key="reise.name">
-        {{ reise.name }}
-        <span v-if="reise.besucht"> - Besucht</span>
-        <span v-else> - Nicht besucht</span>
+      <li v-for="land in reisen" :key="land.name">
+        {{ land.name }} -
+        <span v-if="land.besucht">Besucht</span>
+        <span v-else>Nicht besucht</span> -
+        <span v-if="land.geplant">Geplant</span>
+        <span v-else>Nicht geplant</span>
       </li>
     </ul>
-    <div class="add-reise">
-      <input
-        type="text"
-        v-model="newReise"
-        placeholder="Neue Reise hinzufügen"
-        @keyup.enter="addReise"
-      />
-      <button @click="addReise">Hinzufügen</button>
-    </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import axios from "axios"; // Axios für API-Aufrufe importieren
+import { ref, onMounted } from "vue"; // Vue Composition API verwenden
+
 export default {
-  name: 'Reiseliste',
-  props: {
-    reisen: Array,
-  },
-  data() {
+  name: "App",
+  setup() {
+    const apiEndpoint = "http://localhost:8080/api/laender"; // API-Endpunkt anpassen
+    const reisen = ref([]); // Daten werden hier gespeichert
+
+    // Reiseliste aus dem Backend holen
+    onMounted(() => {
+      axios
+        .get(apiEndpoint)
+        .then((res) => {
+          reisen.value = res.data; // Daten vom Backend speichern
+        })
+        .catch((err) => {
+          console.error("Fehler beim Abrufen der Reiseliste:", err); // Fehlerbehandlung
+        });
+    });
+
     return {
-      newReise: '',
+      reisen,
     };
-  },
-  methods: {
-    addReise() {
-      if (this.newReise.trim() !== '') {
-        this.$emit('add-reise', this.newReise.trim());
-        this.newReise = '';
-      }
-    },
   },
 };
 </script>
 
 <style>
+h1 {
+  text-align: center;
+  color: #4CAF50;
+  margin-bottom: 20px;
+}
 ul {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
 }
-
 li {
   margin: 5px 0;
   font-size: 1.2em;
-}
-
-.add-reise {
-  margin-top: 20px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-input[type="text"] {
-  padding: 5px 10px;
-  font-size: 1em;
-  flex: 1;
-}
-
-button {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 5px 15px;
-  font-size: 1em;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-button:hover {
-  background-color: #45a049;
 }
 </style>
