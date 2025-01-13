@@ -1,0 +1,320 @@
+<!--
+<template>
+  <div style="height:700px; width:1000px">
+  <l-map ref="map" v-model:zoom="zoom" :center="[47.41322, -1.219482]">
+<l-tile-layer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        layer-type="base"
+        name="OpenStreetMap"
+      ></l-tile-layer>
+      <l-polygon v-for="p in polys" :lat-lngs="p" :key="p"></l-polygon>
+    </l-map>
+  </div>
+</template>
+
+<script lang="ts">
+import "leaflet/dist/leaflet.css";
+import { LMap, LPolygon, LTileLayer } from "@vue-leaflet/vue-leaflet";
+import axios from 'axios'
+import type { LatLngExpression } from 'leaflet'
+
+export default {
+  components: {
+    LMap,
+    LTileLayer,
+    LPolygon
+  },
+  data() {
+    return {
+      zoom: 2,
+      polys: [] as LatLngExpression[][]
+    };
+  },
+  mounted() {
+      axios.get("/countries.geo.json")
+        .then((geo) => {
+          // console.log(geo.data.features)
+          const afg = geo.data.features[0];
+          this.polys.push(afg.geometry.coordinates)
+        })
+  },
+};
+</script>
+
+<style></style>
+-->
+<template>
+  <div class="map-page">
+    <!-- Suchleiste und Knöpfe -->
+    <div class="top-bar">
+      <input
+        type="text"
+        v-model="searchTerm"
+        placeholder="Land suchen"
+        class="search-bar"
+      />
+      <button @click="markAsVisited" class="button visited-button">
+        Besucht
+      </button>
+      <button @click="markAsPlanned" class="button planned-button">
+        Geplant
+      </button>
+      <button @click="deleteCountry" class="button delete-button">
+        Löschen
+      </button>
+    </div>
+
+    <!-- Weltkarte -->
+    <div id="map" class="map"></div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref, onMounted } from "vue";
+import mapboxgl, { Map, GeoJSONSource } from "mapbox-gl";
+import type { FeatureCollection } from "geojson";
+
+export default defineComponent({
+  name: "WorldMap",
+  setup() {
+    const searchTerm = ref<string>(""); // Suchleiste mit String
+    const map = ref<Map | null>(null); // Typ Map für Mapbox
+    const geojsonData = ref<FeatureCollection | null>(null); // Typ FeatureCollection für GeoJSON-Daten
+
+
+    // Markiere ein Land als besucht
+    const markAsVisited = () => {
+      if (!searchTerm.value.trim()) {
+        alert("Bitte ein Land eingeben!");
+        return;
+      }
+      const countryName = searchTerm.value.trim();
+
+      const feature = geojsonData.value?.features.find(
+        (f) =>
+          f.properties &&
+          f.properties.name &&
+          f.properties.name.toLowerCase() === countryName.toLowerCase()
+      );
+
+      if (feature) {
+        feature.properties = { ...feature.properties, highlight: "visited" };
+        updateGeoJSON();
+      } else {
+        alert("Land nicht gefunden!");
+      }
+    };
+
+    // Funktion zum Löschen eines Landes
+    const deleteCountry = () => {
+      if (!searchTerm.value.trim()) {
+        alert("Bitte ein Land eingeben!");
+        return;
+      }
+      const countryName = searchTerm.value.trim();
+
+      const feature = geojsonData.value?.features.find(
+        (f) =>
+          f.properties &&
+          f.properties.name &&
+          f.properties.name.toLowerCase() === countryName.toLowerCase()
+      );
+
+      if (feature) {
+        // Highlight-Eigenschaft löschen
+        feature.properties = { ...feature.properties, highlight: null };
+        updateGeoJSON(); // GeoJSON-Daten aktualisieren
+        alert(`${countryName} wurde erfolgreich zurückgesetzt.`);
+      } else {
+        alert("Land nicht gefunden!");
+      }
+    };
+
+
+    // Markiere ein Land als geplant
+    const markAsPlanned = () => {
+      if (!searchTerm.value.trim()) {
+        alert("Bitte ein Land eingeben!");
+        return;
+      }
+      const countryName = searchTerm.value.trim();
+
+      const feature = geojsonData.value?.features.find(
+        (f) =>
+          f.properties &&
+          f.properties.name &&
+          f.properties.name.toLowerCase() === countryName.toLowerCase()
+      );
+
+      if (feature) {
+        feature.properties = { ...feature.properties, highlight: "planned" };
+        updateGeoJSON();
+      } else {
+        alert("Land nicht gefunden!");
+      }
+    };
+
+    // Aktualisiere die GeoJSON-Daten in der Karte
+    const updateGeoJSON = () => {
+      if (map.value?.getSource("countries")) {
+        (map.value.getSource("countries") as GeoJSONSource).setData(
+          geojsonData.value!
+        );
+      }
+    };
+
+    onMounted(() => {
+      mapboxgl.accessToken = "pk.eyJ1IjoiZXlsdXYiLCJhIjoiY201djNtbzdpMDNwcDJpcjF5c24xenN0MiJ9.DA9LH7DAX9ik5ygPevm3Kw"; // Füge hier deinen Mapbox-Token ein
+
+      map.value = new mapboxgl.Map({
+        container: "map",
+        style: "mapbox://styles/mapbox/streets-v11",
+        center: [35, 40],
+        zoom: 2,
+      });
+
+      map.value.on("load", () => {
+
+        fetch("public\\countries.geo.json")
+          .then((response) => response.json())
+          .then((data: FeatureCollection) => {
+            geojsonData.value = data;
+
+            map.value?.addSource("countries", {
+              type: "geojson",
+              data: geojsonData.value,
+            });
+
+            // Layer für Länder hinzufügen
+            map.value?.addLayer({
+              id: "country-fills",
+              type: "fill",
+              source: "countries",
+              paint: {
+                "fill-color": [
+                  "match",
+                  ["get", "highlight"],
+                  "visited",
+                  "#243e6e", // Blau für besucht
+                  "planned",
+                  "#240e53", // Lila für geplant
+                  "rgba(204,204,204,0)", // Standardfarbe (Grau)
+                ],
+                "fill-opacity": 0.6,
+              },
+            });
+
+            // Länderumrisse hinzufügen
+            map.value?.addLayer({
+              id: "country-borders",
+              type: "line",
+              source: "countries",
+              paint: {
+                "line-color": "rgba(0,0,0,0)",
+                "line-width": 1,
+              },
+            });
+          })
+          .catch((error) => console.error("Fehler beim Laden der GeoJSON-Daten:", error));
+      });
+    });
+
+    return {
+      searchTerm,
+      markAsVisited,
+      markAsPlanned,
+      deleteCountry,
+    };
+  },
+});
+</script>
+
+<style scoped>
+/* Stellt sicher, dass der gesamte Bildschirm genutzt wird */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 1000px;
+  height: 700px;
+  overflow: hidden; /* Verhindert Scrollen */
+}
+
+/* Container für die Seite */
+.map-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%; /* Nutzt die gesamte Breite */
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+}
+
+/* Leistenbereich oben */
+.top-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 20px;
+  background-color: #ffffff;
+  box-shadow: 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+/* Suchleiste */
+.search-bar {
+  flex: 1;
+  max-width: 300px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Buttons */
+.button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.visited-button {
+  background-color: #243e6e;
+  color: white;
+}
+
+.planned-button {
+  background-color: #240e53;
+  color: white;
+}
+
+.visited-button:hover {
+  background-color: #243e6e;
+}
+
+.delete-button {
+  background-color: #dc3545; /* Rot */
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+.planned-button:hover {
+  background-color: #240e53;
+}
+
+/* Karte */
+.map {
+  flex: 1;
+  width: 1300px; /* Nutzt die gesamte Breite */
+  height: 700px; /* Höhe mit Platz für die Leiste */
+}
+</style>
