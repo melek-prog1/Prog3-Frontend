@@ -29,6 +29,7 @@
 import { defineComponent, ref, onMounted } from "vue";
 import mapboxgl, { Map, GeoJSONSource } from "mapbox-gl";
 import type { FeatureCollection } from "geojson";
+import { countries } from '@/Model/countries'
 
 export default defineComponent({
   name: "WeltKarte",
@@ -120,7 +121,8 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      mapboxgl.accessToken = "pk.eyJ1IjoiZXlsdXYiLCJhIjoiY201djNtbzdpMDNwcDJpcjF5c24xenN0MiJ9.DA9LH7DAX9ik5ygPevm3Kw"; // Füge hier deinen Mapbox-Token ein
+
+      mapboxgl.accessToken = "pk.eyJ1IjoiZXlsdXYiLCJhIjoiY201djNtbzdpMDNwcDJpcjF5c24xenN0MiJ9.DA9LH7DAX9ik5ygPevm3Kw";
 
       const mapLocal =  new mapboxgl.Map({
         container: "map",
@@ -131,10 +133,11 @@ export default defineComponent({
 
       mapLocal.on("load", () => {
 
-        fetch("public\\countries.geo.json")
-          .then((response) => response.json())
-          .then((data: FeatureCollection) => {
-            geojsonData.value = data;
+
+
+
+
+            geojsonData.value = countries;
 
             mapLocal.addSource("countries", {
               type: "geojson",
@@ -170,8 +173,6 @@ export default defineComponent({
                 "line-width": 1,
               },
             });
-          })
-          .catch((error) => console.error("Fehler beim Laden der GeoJSON-Daten:", error));
       });
 
     map.value = mapLocal;

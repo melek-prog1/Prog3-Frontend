@@ -23,7 +23,8 @@
         class="todo-item"
       >
         <div class="todo-left">
-          <input type="checkbox" v-model="todo.completed" />
+          <input type="checkbox" v-model="todo.completed" @change="toggleCompleted(todo)" />
+
           <span>{{ todo.text }}</span>
         </div>
         <div class="todo-center">
@@ -67,30 +68,71 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
 import type { ToDo } from '@/Model/ToDo'
+import axios from 'axios'
 
 export default defineComponent({
   name: "ToDoListe",
   setup() {
+    const baseUrl = import.meta.env.VITE_APP_BACKEND_BASE_URL+'/api/todos';
+    console.log("Base URL:", baseUrl);
     const todos = ref<ToDo[]>([]);
     const newTodoText = ref("");
     const newTodoCategory = ref("Sonstiges"); // Standardwert
     const selectedCategory = ref("Alle"); // Standardfilter
 
-    const addTodo = () => {
-      if (!newTodoText.value.trim()) return; // Verhindert leere Einträge
-      todos.value.push({
-        id: Date.now(),
+    function addTodo(): void {
+      if (!newTodoText.value.trim()) {
+        alert("Bitte einen gültigen Text eingeben!");
+        return;
+      }
+
+      // To-Do-Objekt erstellen
+      const todoData = {
         text: newTodoText.value.trim(),
         category: newTodoCategory.value,
         completed: false,
-      });
-      newTodoText.value = "";
-      newTodoCategory.value = "Sonstiges"; // Setzt die Kategorie nach dem Hinzufügen zurück
-    };
+      };
 
-    const deleteTodo = (id: number) => {
-      todos.value = todos.value.filter((todo) => todo.id !== id);
-    };
+      axios
+        .post<ToDo>(baseUrl, todoData) // API-Endpoint anpassen
+        .then((res) => {
+          // Eingabefelder zurücksetzen
+          newTodoText.value = "";
+          newTodoCategory.value = "Sonstiges";
+
+          todos.value.push(res.data);
+        })
+        .catch((err) => {
+          console.error("Fehler beim Speichern des To-Dos:", err);
+          alert("Fehler beim Speichern. Bitte erneut versuchen.");
+        });
+    }
+
+
+    async function deleteTodo(id: number): Promise<void> {
+      try {
+        // Lösche den Eintrag direkt, ohne Bestätigung
+        await axios.delete(`${baseUrl}/${id}`);
+        todos.value = todos.value.filter((todo) => todo.id !== id);
+      } catch (err) {
+        console.error("Fehler beim Löschen des To-Dos:", err);
+        alert("Fehler beim Löschen. Bitte erneut versuchen.");
+      }
+    }
+
+    async function toggleCompleted(todo: ToDo): Promise<void> {
+      try {
+        // Sende die aktualisierten Daten an den Server
+        await axios.put(`${baseUrl}/${todo.id}`, {
+          ...todo, // Sende das vollständige ToDo-Objekt
+          completed: todo.completed, // Stelle sicher, dass der aktualisierte Status gesendet wird
+        });
+        console.log("Status erfolgreich aktualisiert!");
+      } catch (err) {
+        console.error("Fehler beim Speichern des Status:", err);
+        alert("Fehler beim Speichern des Status. Bitte erneut versuchen.");
+      }
+    }
 
     const filteredTodos = computed(() => {
       if (selectedCategory.value === "Alle") {
@@ -99,21 +141,43 @@ export default defineComponent({
       return todos.value.filter((todo) => todo.category === selectedCategory.value);
     });
 
+
     return {
+      baseUrl,
       todos,
       newTodoText,
       newTodoCategory,
       selectedCategory,
       addTodo,
       deleteTodo,
+      toggleCompleted,
       filteredTodos,
     };
   },
+  mounted() {
+    console.log("Daten werden geladen...");
+    axios
+      .get(this.baseUrl)
+      .then((response) => {
+        console.log("Antwortdaten vom Backend:", response.data);
+        this.todos = response.data.map((todo: ToDo) => ({
+          id: todo.id,
+          text: todo.text || "Kein Text vorhanden", // Fallback, falls null
+          category: todo.category || "Sonstiges", // Fallback, falls null
+          completed: todo.completed,
+        }));
+      })
+      .catch((error) => {
+        console.error("Fehler beim Laden der Daten:", error);
+      });
+  }
+
+
 });
 </script>
 
 <style scoped>
-/* Container */
+
 .todo-container {
   font-family: Arial, sans-serif;
   color: white;
@@ -122,7 +186,7 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: 20px;
-  margin-top: 80px; /* Abstand für die fixe Filterposition */
+  margin-top: 80px;
 
 }
 
