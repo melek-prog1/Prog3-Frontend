@@ -31,7 +31,7 @@ import mapboxgl, { Map, GeoJSONSource } from "mapbox-gl";
 import type { FeatureCollection } from "geojson";
 
 export default defineComponent({
-  name: "WorldMap",
+  name: "WeltKarte",
   setup() {
     const searchTerm = ref<string>(""); // Suchleiste mit String
     const map = ref<Map | null>(null); // Typ Map für Mapbox
@@ -122,27 +122,27 @@ export default defineComponent({
     onMounted(() => {
       mapboxgl.accessToken = "pk.eyJ1IjoiZXlsdXYiLCJhIjoiY201djNtbzdpMDNwcDJpcjF5c24xenN0MiJ9.DA9LH7DAX9ik5ygPevm3Kw"; // Füge hier deinen Mapbox-Token ein
 
-      map.value = new mapboxgl.Map({
+      const mapLocal =  new mapboxgl.Map({
         container: "map",
         style: "mapbox://styles/mapbox/streets-v11",
         center: [35, 40],
         zoom: 2,
       });
 
-      map.value.on("load", () => {
+      mapLocal.on("load", () => {
 
         fetch("public\\countries.geo.json")
           .then((response) => response.json())
           .then((data: FeatureCollection) => {
             geojsonData.value = data;
 
-            map.value?.addSource("countries", {
+            mapLocal.addSource("countries", {
               type: "geojson",
               data: geojsonData.value,
             });
 
             // Layer für Länder hinzufügen
-            map.value?.addLayer({
+            mapLocal.addLayer({
               id: "country-fills",
               type: "fill",
               source: "countries",
@@ -151,9 +151,9 @@ export default defineComponent({
                   "match",
                   ["get", "highlight"],
                   "visited",
-                  "#243e6e", // Blau für besucht
+                  "#a83580", // Blau für besucht
                   "planned",
-                  "#240e53", // Lila für geplant
+                  "#441c95", // Lila für geplant
                   "rgba(204,204,204,0)", // Standardfarbe (Grau)
                 ],
                 "fill-opacity": 0.6,
@@ -161,7 +161,7 @@ export default defineComponent({
             });
 
             // Länderumrisse hinzufügen
-            map.value?.addLayer({
+            mapLocal.addLayer({
               id: "country-borders",
               type: "line",
               source: "countries",
@@ -173,6 +173,8 @@ export default defineComponent({
           })
           .catch((error) => console.error("Fehler beim Laden der GeoJSON-Daten:", error));
       });
+
+    map.value = mapLocal;
     });
 
     return {
@@ -240,7 +242,7 @@ export default defineComponent({
 }
 
 .visited-button {
-  background-color: #243e6e;
+  background-color: #a83580;
   color: white;
 }
 
@@ -250,7 +252,7 @@ export default defineComponent({
 }
 
 .visited-button:hover {
-  background-color: #243e6e;
+  background-color: #a83580;
 }
 
 .delete-button {

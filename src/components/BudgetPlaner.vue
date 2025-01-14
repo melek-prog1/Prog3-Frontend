@@ -85,18 +85,22 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
+import type { BudgetPlan } from '@/Model/BudgetPlaner'
 
-interface CostEntry {
-  beschreibung: string;
-  kosten: number;
-}
+// interface SavedBudget {
+//   id?: number; // Backend ID
+//   name: string;
+//   totalBudget: number;
+//   remainingBudget: number;
+// }
 
 export default defineComponent({
-  name: "BudgetPlanner",
+  name: "BudgetPlaner",
   setup() {
+    //const API_BASE_URL = "http://localhost:8080/api/budget";
     const totalBudget = ref<number>(0); // Gesamtbudget
-    const costEntries = ref<CostEntry[]>([]); // Liste der Kosten
-    const newCost = ref<CostEntry>({ beschreibung: "", kosten: 0 }); // Neues Kostenelement
+    const costEntries = ref<BudgetPlan[]>([]); // Liste der Kosten
+    const newCost = ref<BudgetPlan>({ beschreibung: "", kosten: 0 }); // Neues Kostenelement
     const remainingBudget = ref<number>(0); // Verbleibendes Budget
     const calculated = ref<boolean>(false); // Status für Berechnung
     const toastMessage = ref<string>(""); // Toast-Nachricht
@@ -125,7 +129,7 @@ export default defineComponent({
       showToast("Kosten erfolgreich hinzugefügt!");
     };
 
-    // Kosteneintrag löschen mit Bestätigung
+
     const confirmDeleteCostEntry = (index: number) => {
       if (confirm("Sind Sie sicher, dass Sie diesen Eintrag löschen möchten?")) {
         costEntries.value.splice(index, 1);

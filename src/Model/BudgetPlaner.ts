@@ -1,6 +1,6 @@
 export interface BudgetPlan {
-  id: number;
+  id?: number;
   beschreibung: string;
   kosten: number;
-  budget: number;
+  budget?:number;
 }

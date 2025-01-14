@@ -66,18 +66,12 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
-
-interface Todo {
-  id: number;
-  text: string;
-  category: string;
-  completed: boolean;
-}
+import type { ToDo } from '@/Model/ToDo'
 
 export default defineComponent({
   name: "ToDoListe",
   setup() {
-    const todos = ref<Todo[]>([]);
+    const todos = ref<ToDo[]>([]);
     const newTodoText = ref("");
     const newTodoCategory = ref("Sonstiges"); // Standardwert
     const selectedCategory = ref("Alle"); // Standardfilter
