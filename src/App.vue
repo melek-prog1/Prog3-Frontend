@@ -100,6 +100,7 @@ body {
   text-transform: uppercase;
   text-align: center;
   width: 100%;
+  color: white;
 }
 
 .nav ul {

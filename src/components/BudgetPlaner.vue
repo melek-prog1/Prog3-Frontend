@@ -1,5 +1,5 @@
 <template>
-  <div class="budget-planner">
+  <div class="budget-planer">
     <h1>Budget Planner</h1>
 
     <!-- Gesamt Budget -->

@@ -3,7 +3,7 @@
     <!-- Überschrift -->
     <h1>To-Do Liste</h1>
 
-    <!-- Kategorienfilter -->
+
     <div class="category-filter">
       <label for="category">Kategorie:</label>
       <select v-model="selectedCategory" id="category">
@@ -129,6 +129,7 @@ export default defineComponent({
   flex-direction: column;
   gap: 20px;
   margin-top: 80px; /* Abstand für die fixe Filterposition */
+
 }
 
 /* Überschrift */
@@ -137,7 +138,8 @@ h1 {
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 24px;
+  font-size: 1.5rem;
+  font-weight: bold;
   margin: 0;
 }
 
@@ -149,9 +151,9 @@ h1 {
   transform: translateX(-50%); /* Zentrieren */
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 30px;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 20px; /*mit margin left schiebst du es seitlich*/
   z-index: 10; /* Damit der Filter immer oben bleibt */
   background-color: #222; /* Hintergrundfarbe für den Filterbereich */
   padding: 10px;
@@ -162,8 +164,8 @@ h1 {
 .todo-list {
   list-style: none;
   padding: 0;
-  margin: 0;
-  margin-top: 100px; /* Abstand für die fixe Filterleiste */
+  margin: -460px;
+  margin-top: -200px; /* Abstand für die fixe Filterleiste */
 }
 
 /* Einträge */
@@ -171,33 +173,38 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  margin: 20px 0;
-  padding: 5px;
-  background-color: #222;
+
+  margin: 10px 0;
+  background-color: rgba(39, 39, 43, 0);
   border-radius: 5px;
 }
 
-/* Linke Spalte */
+/* Haken setzen */
 .todo-left {
-  flex: 1.5;
+  flex: 1.5; /* Nutzt den freien Platz */
   display: flex;
   align-items: center;
-  gap: 10px;
+  white-space: normal; /* Erlaubt Zeilenumbrüche */
+  word-break: break-word; /* Lange Wörter umbrechen */
+  overflow-wrap: break-word; /* Fallback für ältere Browser */
 }
 
-/* Mittlere Spalte */
+
+/* Kategorien */
 .todo-center {
   flex: 1;
   display: flex;
   justify-content: center;
+  width: 120px;
 }
 
-/* Rechte Spalte */
+/* Mülleimer */
 .todo-right {
   flex: 0.5;
   display: flex;
   justify-content: flex-end;
+  margin-right: -300px;
+  width: 40px;
 }
 
 /* Eingabe */
@@ -237,26 +244,29 @@ h1 {
 .category-vorbereitung {
   background-color: #005f8d;
   color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
 }
 
 .category-packliste {
   background-color: #ff5733;
   color: white;
+  border-radius: 15px;
+  padding: 5px 10px;
 }
 
 .category-aktivitaeten {
   background-color: #388e3c;
   color: white;
+  border-radius: 15px;
+  padding: 5px 10px;
 }
 
 .category-sonstiges {
-  background-color: #757575;
+  background-color: #a83580;
   color: white;
+  border-radius: 15px;
+  padding: 5px 10px;
 }
 
-/* Hover-Effekt für Kategorien */
-.todo-item .badge:hover {
-  transform: scale(1.1);
-  transition: all 0.3s ease;
-}
 </style>

@@ -1,48 +1,4 @@
-<!--
-<template>
-  <div style="height:700px; width:1000px">
-  <l-map ref="map" v-model:zoom="zoom" :center="[47.41322, -1.219482]">
-<l-tile-layer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        layer-type="base"
-        name="OpenStreetMap"
-      ></l-tile-layer>
-      <l-polygon v-for="p in polys" :lat-lngs="p" :key="p"></l-polygon>
-    </l-map>
-  </div>
-</template>
 
-<script lang="ts">
-import "leaflet/dist/leaflet.css";
-import { LMap, LPolygon, LTileLayer } from "@vue-leaflet/vue-leaflet";
-import axios from 'axios'
-import type { LatLngExpression } from 'leaflet'
-
-export default {
-  components: {
-    LMap,
-    LTileLayer,
-    LPolygon
-  },
-  data() {
-    return {
-      zoom: 2,
-      polys: [] as LatLngExpression[][]
-    };
-  },
-  mounted() {
-      axios.get("/countries.geo.json")
-        .then((geo) => {
-          // console.log(geo.data.features)
-          const afg = geo.data.features[0];
-          this.polys.push(afg.geometry.coordinates)
-        })
-  },
-};
-</script>
-
-<style></style>
--->
 <template>
   <div class="map-page">
     <!-- Suchleiste und Knöpfe -->
@@ -60,7 +16,7 @@ export default {
         Geplant
       </button>
       <button @click="deleteCountry" class="button delete-button">
-        Löschen
+        Entfernen
       </button>
     </div>
 
@@ -230,25 +186,23 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Stellt sicher, dass der gesamte Bildschirm genutzt wird */
-html,
-body {
-  margin: 0;
-  padding: 0;
-  width: 1000px;
-  height: 700px;
-  overflow: hidden; /* Verhindert Scrollen */
-}
 
-/* Container für die Seite */
 .map-page {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  flex: 1;
+  height: 100%;
   width: 100%; /* Nutzt die gesamte Breite */
-  background-color: #f8f9fa;
-  margin: 0;
   padding: 0;
+  overflow: hidden;
+  margin-left: -185px;
+}
+
+.map {
+  flex: 1;
+  width: 1280px; /* Nutzt die gesamte Breite */
+  height: 700px; /* Höhe mit Platz für die Leiste */
+
 }
 
 /* Leistenbereich oben */
@@ -256,10 +210,10 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 10px 20px;
-  background-color: #ffffff;
+  justify-content: flex-start;
+  gap: 3px;
+  padding: 8px 15px;
+  background-color: #1a1a1a;
   box-shadow: 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 1;
 }
@@ -267,7 +221,7 @@ body {
 /* Suchleiste */
 .search-bar {
   flex: 1;
-  max-width: 300px;
+  max-width: 900px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -276,12 +230,13 @@ body {
 
 /* Buttons */
 .button {
-  padding: 10px 20px;
+  padding: 10px 30px;
   border: none;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
   text-align: center;
+
 }
 
 .visited-button {
@@ -309,12 +264,5 @@ body {
 
 .planned-button:hover {
   background-color: #240e53;
-}
-
-/* Karte */
-.map {
-  flex: 1;
-  width: 1300px; /* Nutzt die gesamte Breite */
-  height: 700px; /* Höhe mit Platz für die Leiste */
 }
 </style>
