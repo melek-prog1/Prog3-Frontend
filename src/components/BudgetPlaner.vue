@@ -38,6 +38,7 @@
         >
           Hinzufügen
         </button>
+
       </div>
 
       <!-- Kostenliste -->
@@ -217,9 +218,8 @@ export default defineComponent({
 
 <style scoped>
 .budget-planner {
-  font-family: "Poppins", Arial, sans-serif;
-  margin: 20px auto;
-  max-width: 600px;
+  font-family: Arial, sans-serif;
+  margin-top: 20px ;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -227,45 +227,12 @@ export default defineComponent({
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
-.toast {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  animation: fadeInOut 3s ease;
-}
-
-@keyframes fadeInOut {
-  0% {
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  80% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-/* Setzt Textfarbe für den Titel und Beschriftungen */
 h1,
 label {
   font-weight: bold;
   color: white; /* Weiß für den Titel und die Beschriftungen */
 }
 
-input,
-button {
-  color: #333; /* Setzt die Textfarbe der Eingabefelder und Buttons auf dunkel */
-}
 
 input {
   width: 100%;
@@ -275,17 +242,14 @@ input {
   border: 1px solid #ddd;
 }
 
+
 button {
   padding: 10px 15px;
-  background-color: #28a745;
+  background-color: #a83580;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-}
-
-button:hover {
-  background-color: #218838;
 }
 
 .cost-item {
@@ -308,11 +272,15 @@ button:hover {
 }
 
 .calculate-btn {
-  background-color: #007bff;
+  background-color: #4e056d;
 }
 
 .calculate-btn:hover {
-  background-color: #0056b3;
+  background-color: #4e056d;
+}
+
+button:hover {
+  background-color: #a83580;
 }
 
 </style>
