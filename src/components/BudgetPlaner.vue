@@ -39,6 +39,7 @@
           Hinzufügen
         </button>
 
+
       </div>
 
       <!-- Kostenliste -->
@@ -51,7 +52,7 @@
           <span class="cost-description">{{ entry.beschreibung }}</span>
           <span class="cost-amount">{{ entry.kosten.toFixed(2) }} €</span>
           <button
-            @click="confirmDeleteCostEntry(entry.id)"
+            @click="confirmDeleteCostEntry((entry.id ?? -1))"
             class="delete-btn"
           >
             Löschen
