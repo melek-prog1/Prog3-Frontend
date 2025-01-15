@@ -50,7 +50,7 @@
           <span class="cost-description">{{ entry.beschreibung }}</span>
           <span class="cost-amount">{{ entry.kosten.toFixed(2) }} €</span>
           <button
-            @click="confirmDeleteCostEntry(index)"
+            @click="confirmDeleteCostEntry(entry.id)"
             class="delete-btn"
           >
             Löschen
@@ -73,7 +73,7 @@
           {{ remainingBudget.toFixed(2) }} €
         </strong>
       </p>
-      <button @click="saveBudget" class="save-btn">Speichern</button>
+
     </div>
 
     <!-- Toast Nachricht -->
@@ -84,20 +84,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, ref, computed, onMounted } from "vue";
+import axios from "axios";
 import type { BudgetPlan } from '@/Model/BudgetPlaner'
-
-// interface SavedBudget {
-//   id?: number; // Backend ID
-//   name: string;
-//   totalBudget: number;
-//   remainingBudget: number;
-// }
 
 export default defineComponent({
   name: "BudgetPlaner",
   setup() {
-    //const API_BASE_URL = "http://localhost:8080/api/budget";
+    const baseUrl = import.meta.env.VITE_APP_BACKEND_BASE_URL + "/api/budget";
     const totalBudget = ref<number>(0); // Gesamtbudget
     const costEntries = ref<BudgetPlan[]>([]); // Liste der Kosten
     const newCost = ref<BudgetPlan>({ beschreibung: "", kosten: 0 }); // Neues Kostenelement
@@ -113,27 +107,42 @@ export default defineComponent({
       }, 3000);
     };
 
-    // Kosteneintrag hinzufügen
-    const addCostEntry = () => {
-      if (!newCost.value.beschreibung.trim()) {
-        showToast("Bitte eine Beschreibung eingeben.");
-        return;
-      }
-      if (newCost.value.kosten <= 0) {
-        showToast("Bitte gültige Kosten eingeben.");
+    const addCostEntry = async () => {
+      if (!newCost.value.beschreibung.trim() || newCost.value.kosten <= 0) {
+        showToast("Bitte gültige Werte eingeben.");
         return;
       }
 
-      costEntries.value.push({ ...newCost.value });
-      newCost.value = { beschreibung: "", kosten: 0 }; // Reset der Eingabe
-      showToast("Kosten erfolgreich hinzugefügt!");
+      console.log("Sende folgende Daten an das Backend:", {
+        beschreibung: newCost.value.beschreibung,
+        kosten: newCost.value.kosten,
+        budget: totalBudget.value,
+      });
+
+      try {
+        const response = await axios.post(baseUrl, {
+          beschreibung: newCost.value.beschreibung,
+          kosten: newCost.value.kosten,
+          budget: totalBudget.value,
+        });
+
+        costEntries.value.push(response.data);
+        newCost.value = { beschreibung: "", kosten: 0 }; // Reset der Eingabe
+        showToast("Kosten erfolgreich hinzugefügt!");
+      } catch (error) {
+        console.error("Fehler beim Hinzufügen eines Eintrags:", error);
+        showToast("Fehler beim Speichern der Kosten.");
+      }
     };
 
-
-    const confirmDeleteCostEntry = (index: number) => {
-      if (confirm("Sind Sie sicher, dass Sie diesen Eintrag löschen möchten?")) {
-        costEntries.value.splice(index, 1);
-        showToast("Eintrag erfolgreich gelöscht!");
+    const confirmDeleteCostEntry = async (id: number) => {
+      try {
+        await axios.delete(`${baseUrl}/${id}`);
+        costEntries.value = costEntries.value.filter((entry) => entry.id !== id);
+        // Entferne die Toast-Nachricht
+        console.log("Eintrag erfolgreich gelöscht!");
+      } catch (error) {
+        console.error("Fehler beim Löschen des Eintrags:", error);
       }
     };
 
@@ -149,27 +158,41 @@ export default defineComponent({
       }
 
       remainingBudget.value = totalBudget.value - totalCosts.value;
-      calculated.value = true; // Markiere als berechnet
+      calculated.value = true;
 
       if (remainingBudget.value < 0) {
         showToast("Achtung: Das Budget wurde überschritten!");
-      } else {
-        showToast("Budget erfolgreich berechnet!");
       }
     };
 
-    // Backend: Speichern des Gesamtbudgets (Beispiel)
+    // Backend: Gesamtes Budget und Kosten speichern
     const saveBudget = async () => {
       try {
-        // Hier würde normalerweise eine Backend-Anfrage kommen
-        showToast("Budget erfolgreich gespeichert!");
+        await axios.put(baseUrl, {
+          totalBudget: totalBudget.value,
+          remainingBudget: remainingBudget.value,
+          costs: costEntries.value,
+        });
+
+
       } catch (error) {
+        console.error("Fehler beim Speichern:", error);
         showToast("Fehler beim Speichern des Budgets.");
-        console.error(error);
       }
     };
 
-    // Überprüfung der Gültigkeit des neuen Kosteneintrags
+    // Daten beim Laden holen
+    onMounted(async () => {
+      try {
+        const response = await axios.get(baseUrl);
+        costEntries.value = response.data;
+
+      } catch (error) {
+        console.error("Fehler beim Laden der Daten:", error);
+        showToast("Fehler beim Laden der Daten.");
+      }
+    });
+
     const isValidNewCost = computed(() => {
       return newCost.value.beschreibung.trim() !== "" && newCost.value.kosten > 0;
     });
@@ -292,11 +315,4 @@ button:hover {
   background-color: #0056b3;
 }
 
-.save-btn {
-  background-color: #ff5722;
-}
-
-.save-btn:hover {
-  background-color: #e64a19;
-}
 </style>

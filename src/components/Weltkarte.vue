@@ -137,45 +137,45 @@ export default defineComponent({
 
 
 
-            geojsonData.value = countries;
+        geojsonData.value = countries;
 
-            mapLocal.addSource("countries", {
-              type: "geojson",
-              data: geojsonData.value,
-            });
+        mapLocal.addSource("countries", {
+          type: "geojson",
+          data: geojsonData.value,
+        });
 
-            // Layer für Länder hinzufügen
-            mapLocal.addLayer({
-              id: "country-fills",
-              type: "fill",
-              source: "countries",
-              paint: {
-                "fill-color": [
-                  "match",
-                  ["get", "highlight"],
-                  "visited",
-                  "#a83580", // Blau für besucht
-                  "planned",
-                  "#441c95", // Lila für geplant
-                  "rgba(204,204,204,0)", // Standardfarbe (Grau)
-                ],
-                "fill-opacity": 0.6,
-              },
-            });
+        // Layer für Länder hinzufügen
+        mapLocal.addLayer({
+          id: "country-fills",
+          type: "fill",
+          source: "countries",
+          paint: {
+            "fill-color": [
+              "match",
+              ["get", "highlight"],
+              "visited",
+              "#a83580", // Blau für besucht
+              "planned",
+              "#441c95", // Lila für geplant
+              "rgba(204,204,204,0)", // Standardfarbe (Grau)
+            ],
+            "fill-opacity": 0.6,
+          },
+        });
 
-            // Länderumrisse hinzufügen
-            mapLocal.addLayer({
-              id: "country-borders",
-              type: "line",
-              source: "countries",
-              paint: {
-                "line-color": "rgba(0,0,0,0)",
-                "line-width": 1,
-              },
-            });
+        // Länderumrisse hinzufügen
+        mapLocal.addLayer({
+          id: "country-borders",
+          type: "line",
+          source: "countries",
+          paint: {
+            "line-color": "rgba(0,0,0,0)",
+            "line-width": 1,
+          },
+        });
       });
 
-    map.value = mapLocal;
+      map.value = mapLocal;
     });
 
     return {
