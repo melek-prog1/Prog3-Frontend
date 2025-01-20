@@ -81,7 +81,6 @@ export default defineComponent({
         // Highlight-Eigenschaft löschen
         feature.properties = { ...feature.properties, highlight: null };
         updateGeoJSON(); // GeoJSON-Daten aktualisieren
-        alert(`${countryName} wurde erfolgreich zurückgesetzt.`);
       } else {
         alert("Land nicht gefunden!");
       }

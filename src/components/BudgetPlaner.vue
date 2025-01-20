@@ -1,6 +1,6 @@
 <template>
   <div class="budget-planer">
-    <h1>Budget Planner</h1>
+    <h1>Budgetplaner</h1>
 
     <!-- Gesamt Budget -->
     <div class="budget-input">
@@ -39,7 +39,6 @@
           Hinzufügen
         </button>
 
-
       </div>
 
       <!-- Kostenliste -->
@@ -54,12 +53,11 @@
           <button
             @click="confirmDeleteCostEntry((entry.id ?? -1))"
             class="delete-btn"
-          >
-            Löschen
-          </button>
+          >🗑️</button>
         </li>
       </ul>
     </div>
+
 
     <!-- Ergebnis -->
     <div class="result-section">
@@ -79,9 +77,7 @@
     </div>
 
     <!-- Toast Nachricht -->
-    <div v-if="toastMessage" class="toast">
-      {{ toastMessage }}
-    </div>
+
   </div>
 </template>
 
@@ -218,70 +214,160 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.budget-planner {
+.budget-planer {
   font-family: Arial, sans-serif;
-  margin-top: 20px ;
+  margin-left: 120px;
   padding: 20px;
-  border: 1px solid #ddd;
   border-radius: 10px;
-  background: rgba(126, 126, 126, 0.1);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  background: rgba(126, 126, 126, 0);
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Abstand zwischen Abschnitten */
+  max-width: 600px; /* Maximale Breite für die gesamte Box */
+  align-items: center; /* Zentriert Inhalte horizontal */
+
 }
 
-h1,
+/* Überschrift */
+h1 {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+  color: white;
+}
+
+/* Eingabefelder und Abschnitte */
+.budget-input,
+.add-cost {
+  display: flex;
+  flex-direction: column; /* Vertikale Anordnung */
+  gap: 10px;
+  width: 400px; /* Volle Breite für Eingaben */
+  margin-bottom: 20px; /* Abstand zu anderen Abschnitten */
+}
+
 label {
   font-weight: bold;
-  color: white; /* Weiß für den Titel und die Beschriftungen */
+  color: white;
 }
-
 
 input {
   width: 100%;
   padding: 10px;
-  margin-bottom: 10px;
   border-radius: 5px;
-  border: 1px solid #ddd;
-}
-
-
-button {
-  padding: 10px 15px;
-  background-color: #a83580;
+  border: 1px solid rgba(221, 221, 221, 0.22);
+  background-color: #333; /* Dunkler Hintergrund */
   color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
+input::placeholder {
+  color: #bbb; /* Farbe des Platzhalters */
+}
+
+/* Kostenliste mit Scroll-Funktion */
+.cost-list {
+    width: 100%; /* Volle Breite */
+    height: 150px; /* Feste Höhe für den Scrollbereich */
+    overflow-y: auto; /* Aktiviert Scrollen bei Bedarf */
+    padding: 15px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.09);
+}
+
+/* Einzelne Kosten */
 .cost-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 10px 0;
-  background-color: #f8f9fa;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 5px;
+  border-radius: 10px;
+  background-color: rgba(250, 248, 249, 0.96);
 }
 
-.cost-description,
-.cost-amount {
-  color: #333; /* Setzt die Textfarbe auf dunkel */
+.cost-description {
+  flex: 2;
+  color: #000;
 }
 
 .cost-amount {
+  flex: 1;
   font-weight: bold;
+  text-align: right;
+  color: #000;
 }
+
+/* Buttons */
+button {
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.add-btn {
+  background-color: #a83580;
+  color: white;
+  border: none;
+}
+
+.add-btn:hover {
+  background-color: #87005a;
+}
+
 
 .calculate-btn {
   background-color: #4e056d;
+  color: white;
+  border: none;
+  margin-top: 20px;
+  padding: 10px 20px;
+  width: 100%; /* Volle Breite */
 }
 
 .calculate-btn:hover {
-  background-color: #4e056d;
+  background-color: #32003b;
 }
 
-button:hover {
-  background-color: #a83580;
+/* Ergebnisbereich */
+.result-section {
+  margin-top: 20px;
+  text-align: center;
 }
 
+.result-section strong {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.positive {
+  color: #47d547 !important;
+  font-size: 1rem !important;
+  font-weight: bold !important;
+}
+
+.negative {
+  color: #ff4d4d !important;
+  font-size: 1rem !important;
+  font-weight: bold !important;
+}
+.delete-btn {
+
+  color: white; /* Weiße Schrift */
+  border: none;
+  border-radius: 5px;
+  width: 30px; /* Breite */
+  height: 30px; /* Höhe */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0; /* Entferne zusätzliches Padding */
+  cursor: pointer;
+  font-size: 1.0rem; /* Größeres Icon */
+}
 </style>

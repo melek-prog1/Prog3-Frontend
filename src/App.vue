@@ -12,12 +12,12 @@
           </li>
           <li :class="{ active: currentView === 'BudgetPlaner' }">
             <a href="#" @click.prevent="switchView('BudgetPlaner')">
-              <span class="icon">💰</span> Budget Planer
+              <span class="icon">💰</span> Budgetplaner
             </a>
           </li>
           <li :class="{ active: currentView === 'ToDoListe' }">
             <a href="#" @click.prevent="switchView('ToDoListe')">
-              <span class="icon">📝</span> To-Do Liste
+              <span class="icon">📝</span> To-do Liste
             </a>
           </li>
         </ul>

@@ -1,7 +1,7 @@
 <template>
   <div class="todo-container">
     <!-- Überschrift -->
-    <h1>To-Do Liste</h1>
+    <h1>To-do Liste</h1>
 
 
     <div class="category-filter">
@@ -240,6 +240,7 @@ h1 {
 /* Haken setzen */
 .todo-left {
   flex: 1.5; /* Nutzt den freien Platz */
+  gap: 15px;
   display: flex;
   align-items: center;
   white-space: normal; /* Erlaubt Zeilenumbrüche */
