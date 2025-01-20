@@ -183,8 +183,7 @@ export default defineComponent({
     onMounted(async () => {
       try {
         const response = await axios.get(baseUrl);
-        costEntries.value = response.data;
-
+        costEntries.value = response?.data || []; // Fallback auf leeres Array
       } catch (error) {
         console.error("Fehler beim Laden der Daten:", error);
         showToast("Fehler beim Laden der Daten.");
