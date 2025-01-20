@@ -21,8 +21,11 @@ Leichtes Hinzufügen und Löschen von Einträgen.
 ## Warum Plan&Go?
 
 🌟 Alle relevanten Planungsaspekte an einem Ort.
+
 🌍 Visuelle Planung: Die Weltkarte gibt dir einen klaren Überblick über deine bisherigen Reisen und zukünftigen Ziele.
+
 💰 Budgetkontrolle leicht gemacht: Behalte immer im Blick, wie viel du ausgegeben hast und wie viel von deinem Reisebudget noch übrig ist.
+
 ✅ Perfekt organisiert: Erstelle und verwalte Aufgabenlisten für jede Phase deiner Reise – von der Vorbereitung bis zum Packen.
 
 
