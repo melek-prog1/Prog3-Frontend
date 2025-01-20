@@ -1,26 +1,42 @@
-# prog3-frontend
+# Plan&Go – Effiziente Reiseplanung leicht gemacht
+Plan&Go ist eine Webanwendung, die Reisenden dabei hilft, ihre Reisen klar und strukturiert zu organisieren. Ob es um die Verwaltung eines Reisebudgets, das Festhalten von Reisezielen oder das Erstellen von To-Do-Listen geht – Plan&Go bietet eine zentrale Plattform für alle wichtigen Planungsaufgaben.
 
-This template should help get you started developing with Vue 3 in Vite.
+Die App richtet sich an alle, die mehr Übersicht und Kontrolle bei der Reiseplanung suchen, sei es für eine kurze Städtereise oder eine umfassende Weltreise. Mit einer Kombination aus klarer Benutzerführung und praktischen Funktionen unterstützt Plan&Go dich dabei, nichts zu übersehen und deine Reisevorbereitungen effizient zu gestalten.
 
-## Recommended IDE Setup
+## Features
+### 🌍 Weltkarte
+Markiere Reiseziele direkt auf einer interaktiven Karte.
+Setze Länder auf "besucht" oder plane zukünftige Reisen.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+### 💰 Budget Planer
+Verwalte dein Reisebudget mit dem integrierten Budgetplaner.
+Füge Ausgaben hinzu und halte dein verbleibendes Budget im Auge.
+Dynamische Berechnung des Budgets mit einer visuellen Anzeige.
 
-## Type Support for `.vue` Imports in TS
+### ✅ To-Do-Liste
+Organisiere deine Reisevorbereitungen mit einer übersichtlichen Aufgabenliste.
+Kategorien wie "Vorbereitung", "Packliste", "Aktivitäten" und "Sonstiges".
+Leichtes Hinzufügen und Löschen von Einträgen.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## Warum Plan&Go?
 
-## Customize configuration
+🌟 Alle relevanten Planungsaspekte an einem Ort.
+🌍 Visuelle Planung: Die Weltkarte gibt dir einen klaren Überblick über deine bisherigen Reisen und zukünftigen Ziele.
+💰 Budgetkontrolle leicht gemacht: Behalte immer im Blick, wie viel du ausgegeben hast und wie viel von deinem Reisebudget noch übrig ist.
+✅ Perfekt organisiert: Erstelle und verwalte Aufgabenlisten für jede Phase deiner Reise – von der Vorbereitung bis zum Packen.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
 
-## Project Setup
+## Installation
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### Starten des Frontend-Servers
+
+```sh
+npm run kill
+```
 
 ```sh
 npm run dev
