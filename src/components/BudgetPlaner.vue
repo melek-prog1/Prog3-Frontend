@@ -311,18 +311,18 @@ button {
 }
 
 .add-btn {
-  background-color: #a83580;
+  background-color: #69079d;
   color: white;
   border: none;
 }
 
 .add-btn:hover {
-  background-color: #87005a;
+  background-color: #4e056d;
 }
 
 
 .calculate-btn {
-  background-color: #4e056d;
+  background-color: #a83580;
   color: white;
   border: none;
   margin-top: 20px;
@@ -331,7 +331,7 @@ button {
 }
 
 .calculate-btn:hover {
-  background-color: #32003b;
+  background-color: #87005a;
 }
 
 /* Ergebnisbereich */
@@ -370,4 +370,9 @@ button {
   cursor: pointer;
   font-size: 1.0rem; /* Größeres Icon */
 }
+
+.result-text {
+  color: white; /* Setzt die Schriftfarbe auf Weiß */
+}
+
 </style>

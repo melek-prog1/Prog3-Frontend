@@ -247,7 +247,7 @@ export default defineComponent({
 }
 
 .planned-button {
-  background-color: #240e53;
+  background-color: #69079d;
   color: white;
 }
 
@@ -265,6 +265,6 @@ export default defineComponent({
 }
 
 .planned-button:hover {
-  background-color: #240e53;
+  background-color: #4e056d;
 }
 </style>
