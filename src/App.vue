@@ -2,7 +2,10 @@
   <div id="app" class="main">
     <!-- Sidebar -->
     <aside class="sidebar">
-      <h1 class="logo">Plan&Go</h1>
+      <div class="logo-container">
+        <img :src="Logo" alt="Logo" class="logo">
+      </div>
+      <h1>Plan&Go</h1>
       <nav class="nav">
         <ul>
           <li :class="{ active: currentView === 'Weltkarte' }">
@@ -33,6 +36,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import Logo from './assets/PlanGoLogo.png';
 import Weltkarte from "./components/Weltkarte.vue";
 import BudgetPlaner from "./components/BudgetPlaner.vue";
 import ToDoListe from "./components/ToDo.vue";
@@ -46,7 +50,8 @@ export default defineComponent({
   },
   data() {
     return {
-      currentView: "Weltkarte", // Standardansicht
+      currentView: "Weltkarte",
+      Logo,// Standardansicht
     };
   },
   methods: {
@@ -60,6 +65,26 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/* Container nur für das Logo */
+.logo-container {
+  margin-bottom: 150px;
+  display: flex;
+  justify-content: center; /* Zentriert das Logo horizontal */
+  align-items: center; /* Zentriert das Logo vertikal */
+
+
+}
+
+/* nur Logo */
+.logo {
+  position: fixed;
+  width: 300px; /* Breite des Logos */
+  margin-left: 200px;
+  margin-top: 250px;
+  pointer-events: none;
+}
+
+
 /* Globale Styles */
 body {
   margin: 0;
@@ -94,7 +119,7 @@ body {
   z-index: 10; /* Sicherstellen, dass die Sidebar über der Content-Ebene liegt */
 }
 
-.logo {
+h1{
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 2rem;
@@ -124,6 +149,7 @@ body {
   padding: 0.8rem;
   border-radius: 5px;
   transition: background-color 0.3s ease, color 0.3s ease;
+  width: 200px;
 }
 
 .nav a:hover {
